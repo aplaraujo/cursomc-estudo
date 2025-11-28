@@ -1,5 +1,6 @@
 package io.github.aplaraujo.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -17,5 +18,13 @@ public class CategoryService {
 
     public Optional<Category> findById(Long id) {
         return categoryRepository.findById(id);
+    }
+
+    public List<Category> search(String name) {
+        if (name != null) {
+            return categoryRepository.findByName(name);
+        }
+
+        return categoryRepository.findAll();
     }
 }
