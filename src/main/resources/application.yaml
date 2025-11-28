@@ -1,3 +1,7 @@
 spring:
   application:
     name: cursomc-estudo
+  profiles:
+    active: test
+  jpa:
+    open-in-view: false
