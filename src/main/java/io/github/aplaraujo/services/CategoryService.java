@@ -33,4 +33,13 @@ public class CategoryService {
         categoryValidator.validate(category);
         return categoryRepository.save(category);
     }
+
+    public void update(Category category) {
+        if (category.getId() == null) {
+            throw new IllegalArgumentException("Category not found!");
+        }
+
+        categoryValidator.validate(category);
+        categoryRepository.save(category);
+    }
 }

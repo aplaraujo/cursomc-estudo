@@ -2,12 +2,14 @@ package io.github.aplaraujo.controllers;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,5 +53,20 @@ public class CategoryController implements GenericController {
         categoryService.insert(category);
         URI location = generateHeaderLocation(category.getId());
         return ResponseEntity.created(location).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable String id, @RequestBody CategoryDTO dto) {
+        var categoryId = Long.parseLong(id);
+        Optional<Category> catOptional = categoryService.findById(categoryId);
+
+        if (catOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var result = catOptional.get();
+        result.setName(dto.name());
+        categoryService.update(result);
+        return ResponseEntity.noContent().build();
     }
 }
