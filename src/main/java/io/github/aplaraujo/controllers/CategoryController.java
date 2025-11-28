@@ -1,11 +1,14 @@
 package io.github.aplaraujo.controllers;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping(value="/categories")
 @RequiredArgsConstructor
-public class CategoryController {
+public class CategoryController implements GenericController {
 
     private final CategoryService categoryService;
     private final CategoryMapper categoryMapper;
@@ -39,5 +42,14 @@ public class CategoryController {
         List<Category> list = categoryService.search(name);
         List<CategoryDTO> dto = list.stream().map(categoryMapper::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(dto);
+    }
+
+    @SuppressWarnings("null")
+    @PostMapping
+    public ResponseEntity<Void> insert(@RequestBody CategoryDTO dto) {
+        Category category = categoryMapper.toEntity(dto);
+        categoryService.insert(category);
+        URI location = generateHeaderLocation(category.getId());
+        return ResponseEntity.created(location).build();
     }
 }

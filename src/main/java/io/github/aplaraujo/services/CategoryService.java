@@ -27,4 +27,10 @@ public class CategoryService {
 
         return categoryRepository.findAll();
     }
+
+    @SuppressWarnings("null")
+    public Category insert(Category category) {
+        categoryValidator.validate(category);
+        return categoryRepository.save(category);
+    }
 }
