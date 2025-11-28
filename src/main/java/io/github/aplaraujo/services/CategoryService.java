@@ -12,10 +12,12 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("null")
 public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryValidator categoryValidator;
 
+    
     public Optional<Category> findById(Long id) {
         return categoryRepository.findById(id);
     }
@@ -28,7 +30,6 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
-    @SuppressWarnings("null")
     public Category insert(Category category) {
         categoryValidator.validate(category);
         return categoryRepository.save(category);
@@ -41,5 +42,9 @@ public class CategoryService {
 
         categoryValidator.validate(category);
         categoryRepository.save(category);
+    }
+
+    public void delete(Category category) {
+        categoryRepository.delete(category);
     }
 }

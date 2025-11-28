@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,6 +68,19 @@ public class CategoryController implements GenericController {
         var result = catOptional.get();
         result.setName(dto.name());
         categoryService.update(result);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        var categoryId = Long.parseLong(id);
+        Optional<Category> category = categoryService.findById(categoryId);
+
+        if (category.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        categoryService.delete(category.get());
         return ResponseEntity.noContent().build();
     }
 }
